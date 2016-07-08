@@ -4,13 +4,21 @@ import java.io.Serializable;
 
 public class Card implements Serializable{
 
-    int value;
-    String culori;
+    public static final long serialVersionUID = 1L;
+
+    private int value;
+    private String culori;
+
     Card(int value, String culori){
         this.value = value;
         this.culori = culori;
 
     }
+
+    public int getValue(){
+        return value;
+    }
+
 
     @Override
     public String toString() {

@@ -7,24 +7,20 @@ import java.util.Collections;
 public class Deck {
     ArrayList<Card> pachet;
 
-    Deck(){
+    public Deck(){
         pachet = new ArrayList<Card>();
         for(int i=1;i<=13;i++)
         {
             pachet.add(new Card(i,"Diamonds"));
-        }
-        for(int i=1;i<=13;i++)
-        {
             pachet.add(new Card(i,"Clubs"));
-        }
-        for(int i=1;i<=13;i++)
-        {
             pachet.add(new Card(i,"Hearts"));
-        }
-        for(int i=1;i<=13;i++)
-        {
             pachet.add(new Card(i,"Spades"));
         }
+        shuffle();
+    }
+
+    public void shuffle(){
+        Collections.shuffle(pachet);
     }
 
     public Card getCard() {
