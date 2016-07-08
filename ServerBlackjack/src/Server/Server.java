@@ -1,8 +1,9 @@
-package Server;
+package server;
+
+import deck.Card;
+import deck.Deck;
 
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -18,6 +19,8 @@ public class Server {
 
     private int port;
     ArrayList<Serverthread> threads;
+
+    Deck deck;
 
     Server() {
 
@@ -45,6 +48,27 @@ public class Server {
                 e.printStackTrace();
             }
         }
+
+        deck = new Deck();
+        Card card1;
+        Card card2;
+
+
+
+        for(int i = 0; i<threads.size(); i++){
+            card1 = deck.getCard();
+            card2 = deck.getCard();
+            try {
+                threads.get(0).getObjectOutputStream().writeObject(card1);
+                threads.get(0).getObjectOutputStream().writeObject(card2);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        card1 = deck.getCard();
+        card2 = deck.getCard();
+
     }
 
 }

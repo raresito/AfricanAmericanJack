@@ -1,6 +1,6 @@
-package Server;
+package server;
 
-import Server.Server;
+import server.Server;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -11,6 +11,14 @@ public class Serverthread implements Runnable{
 
     private Socket socketClient;
     private Server server;
+
+    public ObjectInputStream getObjectInputStream() {
+        return objectInputStream;
+    }
+
+    public void setObjectInputStream(ObjectInputStream objectInputStream) {
+        this.objectInputStream = objectInputStream;
+    }
 
     private ObjectInputStream objectInputStream;
     private ObjectOutputStream objectOutputStream;
@@ -33,6 +41,10 @@ public class Serverthread implements Runnable{
             e.printStackTrace();
         }
 
+    }
+
+    public ObjectOutputStream getObjectOutputStream(){
+        return objectOutputStream;
     }
 
     public void close(){
