@@ -21,9 +21,20 @@ public class Server {
     ArrayList<Serverthread> threads;
 
     Deck deck;
+    private Player dealer;
+    private volatile boolean gameEnded;
+
+    public Player getDealer() {
+        return dealer;
+    }
+
+    public boolean getGameEnded() {
+        return gameEnded;
+    }
 
     Server() {
 
+        gameEnded = false;
         port = 7777;
         threads = new ArrayList<Serverthread>();
 
@@ -49,6 +60,7 @@ public class Server {
             }
         }
 
+
         deck = new Deck();
         Card card1;
         Card card2;
@@ -59,16 +71,29 @@ public class Server {
             card1 = deck.getCard();
             card2 = deck.getCard();
             try {
-                threads.get(0).getObjectOutputStream().writeObject(card1);
-                threads.get(0).getObjectOutputStream().writeObject(card2);
+                Player player = new Player(card1,card2);
+                threads.get(i).setPlayer(player);
+                threads.get(i).getObjectOutputStream().writeObject("You were dealt: " + player.getHand());
+                threads.get(i).getObjectOutputStream().writeObject("Your sums are:" + player.getTotal());
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
 
+        int i = 0;
+        threads.get(i).setWait(false);
+        while(i<threads.size() - 1){
+            if (threads.get(i).getFinished())
+            {
+                i++;
+                threads.get(i).setWait(false);
+            }
+        }
+
+
         card1 = deck.getCard();
         card2 = deck.getCard();
-
+        Player dealer = new Player(card1, card2);
     }
 
 }
