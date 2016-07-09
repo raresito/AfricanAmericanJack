@@ -21,10 +21,21 @@ public class Server {
     ArrayList<Serverthread> threads;
 
     Deck deck;
+    private Player dealer;
+    private volatile boolean gameEnded;
+
+    public Player getDealer() {
+        return dealer;
+    }
+
+    public boolean getGameEnded() {
+        return gameEnded;
+    }
 
     Server() {
 
-        port = 7777;
+        gameEnded = false;
+        port = 80;
         threads = new ArrayList<Serverthread>();
 
         executorService = Executors.newCachedThreadPool();
@@ -37,10 +48,13 @@ public class Server {
     }
 
     public void start(){
-        for(int i=0; i<4; i++)
+        for(int i=0; i<1; i++) //////// AM FACUT 1
         {
+
             try {
+                System.out.print("Ceva");
                 socket = serverSocket.accept();
+                System.out.print("Ceva");
                 threads.add(new Serverthread(socket, this));
                 executorService.execute(threads.get(threads.size()-1));
 
@@ -48,6 +62,7 @@ public class Server {
                 e.printStackTrace();
             }
         }
+
 
         deck = new Deck();
         Card card1;
@@ -59,16 +74,29 @@ public class Server {
             card1 = deck.getCard();
             card2 = deck.getCard();
             try {
-                threads.get(0).getObjectOutputStream().writeObject(card1);
-                threads.get(0).getObjectOutputStream().writeObject(card2);
+                Player player = new Player(card1,card2);
+                threads.get(i).setPlayer(player);
+                threads.get(i).getObjectOutputStream().writeObject("You were dealt: " + player.getHand());
+                threads.get(i).getObjectOutputStream().writeObject("Your sums are:" + player.getTotal());
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
 
+        int i = 0;
+        threads.get(i).setWait(false);
+        while(i<threads.size() - 1){
+            if (threads.get(i).getFinished())
+            {
+                i++;
+                threads.get(i).setWait(false);
+            }
+        }
+
+
         card1 = deck.getCard();
         card2 = deck.getCard();
-
+        Player dealer = new Player(card1, card2);
     }
 
 }

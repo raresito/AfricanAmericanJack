@@ -6,9 +6,18 @@ import java.util.ArrayList;
 
 public class Player {
 
+
+
     private ArrayList<Card> hand;
     private ArrayList<Integer> total;
 
+    public ArrayList<Card> getHand() {
+        return hand;
+    }
+
+    public ArrayList<Integer> getTotal() {
+        return total;
+    }
 
     public Player(Card card1, Card card2)
     {
@@ -17,12 +26,12 @@ public class Player {
         hand.add(card2);
         total.add(0);
         if(card1.getValue() == 1){
-            ace();
+            addAce();
         }
         else addValue(card1.getValue());
 
         if(card2.getValue() == 1){
-            ace();
+            addAce();
         }
         else addValue(card2.getValue());
     }
@@ -37,7 +46,7 @@ public class Player {
         }
     }
 
-    public void ace(){
+    public void addAce(){
         int dimensiune = total.size();
         for(int i=0;i<dimensiune;i++)
         {
@@ -64,7 +73,7 @@ public class Player {
     public void addCard(Card card){
         hand.add(card);
         if(card.getValue() == 1)
-            ace();
+            addAce();
         else
             addValue(card.getValue());
     }
