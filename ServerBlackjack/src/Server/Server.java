@@ -35,7 +35,7 @@ public class Server {
     Server() {
 
         gameEnded = false;
-        port = 7777;
+        port = 80;
         threads = new ArrayList<Serverthread>();
 
         executorService = Executors.newCachedThreadPool();
@@ -48,10 +48,13 @@ public class Server {
     }
 
     public void start(){
-        for(int i=0; i<4; i++)
+        for(int i=0; i<1; i++) //////// AM FACUT 1
         {
+
             try {
+                System.out.print("Ceva");
                 socket = serverSocket.accept();
+                System.out.print("Ceva");
                 threads.add(new Serverthread(socket, this));
                 executorService.execute(threads.get(threads.size()-1));
 

@@ -1,7 +1,6 @@
 package server;
 
 import deck.Card;
-import server.Server;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -18,9 +17,6 @@ public class Serverthread implements Runnable{
     private ObjectOutputStream objectOutputStream;
 
     private volatile boolean wait;
-
-
-
 
     private boolean finished;
 
@@ -62,6 +58,7 @@ public class Serverthread implements Runnable{
             objectOutputStream = new ObjectOutputStream(socketClient.getOutputStream());
             objectOutputStream.flush();
             objectInputStream = new ObjectInputStream(socketClient.getInputStream());
+            //System.out.print(server.getDealer().getHand().get(0));
             objectOutputStream.writeObject("Dealer has:" + server.getDealer().getHand().get(0)); //Trimit doar prima carte a dealerului.
             objectOutputStream.flush();
             while(!server.getGameEnded()){
