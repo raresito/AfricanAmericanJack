@@ -17,7 +17,7 @@ public class ClientClass{
     private ObjectInputStream input; // pentru a primi mesase de la server
     private ObjectOutputStream output; // pentru a trimite mesaje la server
 
-    private Object messageReceived;
+    private volatile Object messageReceived;
     private String messageSent;
 
 
@@ -51,7 +51,7 @@ public class ClientClass{
 
     public void startReading()
     {
-        Thread thread = new Thread(new Runnable()
+        final Thread thread = new Thread(new Runnable()
         {
             @Override
             public void run()
@@ -62,11 +62,11 @@ public class ClientClass{
                     {
                         if (messageReceived instanceof Card)
                         {
-                            System.out.println("You were dealt" + (Card) messageReceived);
+                            System.out.println((Card) messageReceived);
                         }
                         if (messageReceived instanceof Integer)
                         {
-                            System.out.println("Dealer has so far the total:" + (Integer) messageReceived);
+                            System.out.println((Integer) messageReceived);
                         }
                         if (messageReceived instanceof String)
                         {
@@ -76,13 +76,12 @@ public class ClientClass{
                                 System.out.println("Bust! You Lost");
                                 break;
                             }
-                            if (message.equals("WIN") || message.equals("LOSE") || message.equals("DRAW"))
+                            else if (message.equals("You Win") || message.equals("You Lost") || message.equals("Draw") || message.equals("Dealer BUSTED! You Win!"))
                             {
                                 System.out.println(message);
                                 break;
                             }
-
-                            if(message.equals("Enter option: HIT/STAND"))
+                            else
                             {
                                 System.out.println(message);
                             }
@@ -92,32 +91,37 @@ public class ClientClass{
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
+                    close();
                 } catch (ClassNotFoundException e) {
                     e.printStackTrace();
+                    close();
                 }
+                close();
             }
         });
+        thread.start();
     }
 
     public void writeMessage()
     {
-        Scanner input = new Scanner(System.in);
+        Scanner scan = new Scanner(System.in);
         while(true)
         {
             if(messageReceived instanceof String)
             {
                 String message = messageReceived.toString();
-                if(message.equals("It's your turn! HIT or STAND"))
+                if(message.equals("Enter option: HIT/STAND"))
                 {
-                    messageSent = input.next();
+                    messageSent = scan.next();
                     try {
                         output.writeObject(messageSent);
                     } catch (IOException e) {
                         e.printStackTrace();
+                        close();
                     }
                 }
 
-                if(message.equals("BUSTED") || message.equals("Please wait for the results"))
+                if(messageReceived.equals("BUSTED") || messageReceived.equals("Please wait for the results"))
                     break;
 
             }
@@ -132,6 +136,14 @@ public class ClientClass{
         writeMessage();
     }
 
-    public void run() {
+    public void close()
+    {
+        try {
+            input.close();
+            output.close();
+            socket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

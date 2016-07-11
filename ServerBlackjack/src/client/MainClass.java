@@ -1,12 +1,13 @@
 package client;
 
+import client.ClientClass;
+
 import java.io.IOException;
 
 public class MainClass {
-    public static void main (String[] argc) throws IOException, ClassNotFoundException {
-
-        ClientClass client = new ClientClass("127.0.0.1", 80); // momentan ar trebui sa fim conectati
-        client.run();
+    public static void main (String[] argc)
+    {
+        ClientClass client = new ClientClass("188.25.25.216", 9797); // momentan ar trebui sa fim conectati
         client.play();
     }
 }
